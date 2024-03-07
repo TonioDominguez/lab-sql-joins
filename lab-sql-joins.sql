@@ -9,10 +9,10 @@ USE sakila;
 SELECT DISTINCT category_id
 FROM film_category;
 
-SELECT category_id AS category_of_film, film_id AS num_of_films
+SELECT category_id AS category_of_film, COUNT(film_id) AS num_of_films
 FROM film_category
 GROUP BY category_id
-ORDER BY film_id DESC;
+ORDER BY category_id DESC;
 
 -- Retrieve the store ID, city, and country for each store
 
@@ -96,4 +96,19 @@ ORDER BY n_times_rented DESC
 LIMIT 10;
 
 -- Determine if "Academy Dinosaur" can be rented from Store 1
-
+SELECT
+    film.title AS movie_title,
+    store.store_id,
+    COUNT(rental.rental_id) AS rental_count
+FROM
+    film
+JOIN
+    inventory ON film.film_id = inventory.film_id
+JOIN
+    rental ON inventory.inventory_id = rental.inventory_id
+JOIN
+    store ON inventory.store_id = store.store_id
+WHERE
+    film.title = 'Academy Dinosaur' AND store.store_id = 1
+GROUP BY
+    film.title, store.store_id;
